@@ -1,0 +1,5 @@
+{
+  "status": "insufficient_data",
+  "n_samples": 5,
+  "message": "Need at least 10 samples for drift detection"
+}

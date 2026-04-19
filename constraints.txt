@@ -1,0 +1,4 @@
+# Pin low-level scientific stack
+numpy==1.26.4
+scipy==1.16.1        # already required by sklearn 1.7
+pandas==2.3.2

@@ -1,0 +1,41 @@
+fastapi==0.111.1
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+slowapi==0.1.9
+
+# Data validation
+pydantic==2.5.3
+email-validator==2.1.0
+
+# ML & Data Science
+scikit-learn==1.7.1
+pandas==2.3.2
+numpy==1.26.4  # Must be <2.0 for river compatibility
+joblib==1.5.2
+mlflow==3.3.2
+
+# Feature extraction
+tldextract==5.1.1
+iocextract==1.16.1
+
+# HTTP client
+httpx==0.26.0
+
+# Drift detection
+river==0.22.0
+
+# Template rendering
+jinja2==3.1.6
+
+# Database
+sqlalchemy==2.0.25
+
+# Optional: Fast email parsing
+# fast-mail-parser==1.2.2
+
+# Development
+pytest==7.4.3
+black==24.3.0
+flake8==7.0.0
+openai
+python-dotenv
