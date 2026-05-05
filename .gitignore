@@ -1,0 +1,48 @@
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+.env
+.venv/
+__pycache__/
+*.joblib
+mlruns/
+storage/
+backend_server.log
+model.joblib
+/backend/ml/model.joblib
+/ml/model.joblib
+
+# Frontend development assets (React/Node.js)
+frontend/node_modules/
+frontend/package.json
+frontend/package-lock.json
+frontend/postcss.config.js
+frontend/tsconfig.json
+frontend/src/
+frontend/Dockerfile
+frontend/nginx.conf
+
+# Backend development assets
+backend/tests/
+backend/config.py
+backend/temp_openai_test.py
+
+# Cursor/IDE specific files
+.cursor-history
+cursor_*.md
+
