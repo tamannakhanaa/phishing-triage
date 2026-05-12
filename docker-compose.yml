@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  phish-triage:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=sqlite:///storage/submissions.db
+      - RISK_THRESHOLD=0.85
+      - MODEL_PATH=ml/model.joblib
+      - MAX_DAILY_DETONATIONS=20
+      - SANDBOX_TIMEOUT_SECONDS=300
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/app/storage
+      - ./ml/metrics:/app/ml/metrics
+      - ./logs:/app/logs
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: MLflow tracking server
+  mlflow:
+    image: python:3.11-slim
+    command: >
+      sh -c "pip install mlflow && 
+             mlflow server --host 0.0.0.0 --port 5000 
+             --default-artifact-root /app/mlruns 
+             --backend-store-uri sqlite:///app/mlflow.db"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/app/mlruns
+      - ./mlflow.db:/app/mlflow.db
+    restart: unless-stopped
+
+  # Optional: PostgreSQL for production
+  # postgres:
+  #   image: postgres:15-alpine
+  #   environment:
+  #     POSTGRES_USER: phishtriage
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+  #     POSTGRES_DB: phishtriage
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+
+volumes:
+  postgres_data:
