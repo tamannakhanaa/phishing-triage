@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Triage System - Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2d3748;
+        }
+        .header h1 {
+            margin: 0;
+            color: #1a202c;
+            font-size: 2.5em;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .btn {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .result.success {
+            background: #f0fff4;
+            border: 2px solid #68d391;
+            color: #22543d;
+        }
+        .result.error {
+            background: #fed7d7;
+            border: 2px solid #fc8181;
+            color: #742a2a;
+        }
+        .result.warning {
+            background: #fefcbf;
+            border: 2px solid #f6e05e;
+            color: #744210;
+        }
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .demo-urls {
+            margin-top: 30px;
+            padding: 20px;
+            background: #edf2f7;
+            border-radius: 8px;
+        }
+        .demo-url {
+            display: block;
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #2d3748;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .demo-url:hover {
+            border-color: #4299e1;
+        }
+        .loading {
+            text-align: center;
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Phishing Triage System</h1>
+            <p>Advanced Threat Intelligence & ML Detection</p>
+            <p><strong>Built by Huy Tran</strong> - Cybersecurity & ML Engineering Project</p>
+        </div>
+
+        <div class="input-group">
+            <label for="urlInput">Enter URL to analyze:</label>
+            <input type="url" id="urlInput" placeholder="http://example.com/suspicious-link" />
+        </div>
+
+        <button class="btn" onclick="analyzeURL()">🔍 Analyze URL</button>
+
+        <div id="result" class="result"></div>
+
+        <div class="demo-urls">
+            <h3>🎯 Try these demo URLs:</h3>
+            <a class="demo-url" onclick="setURL('https://www.google.com')">
+                <strong>https://www.google.com</strong> - Legitimate site
+            </a>
+            <a class="demo-url" onclick="setURL('http://phishing-test.com/login')">
+                <strong>http://phishing-test.com/login</strong> - Suspicious URL
+            </a>
+            <a class="demo-url" onclick="setURL('http://192.168.1.1/admin/login.php')">
+                <strong>http://192.168.1.1/admin/login.php</strong> - IP-based login
+            </a>
+        </div>
+
+        <div style="margin-top: 40px; text-align: center; color: #718096;">
+            <p>
+                <a href="https://github.com/itsnothuy/Phishing-Triage" target="_blank" style="color: #4299e1;">📖 GitHub Repository</a>
+                |
+                <a href="${API_BASE}/docs" target="_blank" style="color: #4299e1;">🔧 API Documentation</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const API_BASE = window.location.origin; // Dynamically set API_BASE
+
+        function setURL(url) {
+            document.getElementById('urlInput').value = url;
+        }
+
+        async function analyzeURL() {
+            const urlInput = document.getElementById('urlInput');
+            const resultDiv = document.getElementById('result');
+            const btn = document.querySelector('.btn');
+            
+            const url = urlInput.value.trim();
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+
+            // Show loading
+            btn.disabled = true;
+            btn.textContent = '🔄 Analyzing...';
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '<div class="loading"><h3>🔄 Analyzing URL...</h3><p>Running ML models and threat intelligence checks...</p></div>';
+
+            try {
+                // Submit URL for analysis
+                const submitResponse = await fetch(`${API_BASE}/submit-url`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        detonate: false
+                    })
+                });
+
+                if (!submitResponse.ok) {
+                    throw new Error(`HTTP error! status: ${submitResponse.status}`);
+                }
+
+                const submitData = await submitResponse.json();
+                const submissionId = submitData.id;
+
+                // Wait for processing and get report
+                setTimeout(async () => {
+                    try {
+                        const reportResponse = await fetch(`${API_BASE}/report/${submissionId}`);
+                        
+                        if (!reportResponse.ok) {
+                            throw new Error(`HTTP error! status: ${reportResponse.status}`);
+                        }
+
+                        const reportData = await reportResponse.json();
+                        displayResult(reportData, url);
+
+                    } catch (error) {
+                        console.error('Error getting report:', error);
+                        resultDiv.className = 'result error';
+                        resultDiv.innerHTML = `<h3>❌ Error</h3><p>Failed to get analysis results: ${error.message}</p>`;
+                    }
+
+                    // Reset button
+                    btn.disabled = false;
+                    btn.textContent = '🔍 Analyze URL';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<h3>❌ Analysis Failed</h3><p>${error.message}</p><p>Make sure the API server is running on port 8001</p>`;
+                
+                // Reset button
+                btn.disabled = false;
+                btn.textContent = '🔍 Analyze URL';
+            }
+        }
+
+        function displayResult(result, url) {
+            const resultDiv = document.getElementById('result');
+            const score = result.score || 0;
+            
+            let riskLevel, riskClass, riskIcon;
+            if (score >= 0.8) {
+                riskLevel = 'HIGH RISK';
+                riskClass = 'error';
+                riskIcon = '🚨';
+            } else if (score >= 0.5) {
+                riskLevel = 'MEDIUM RISK';
+                riskClass = 'warning';
+                riskIcon = '⚠️';
+            } else {
+                riskLevel = 'LOW RISK';
+                riskClass = 'success';
+                riskIcon = '✅';
+            }
+
+            resultDiv.className = `result ${riskClass}`;
+
+            // Security: Sanitize and render the markdown report
+            let reportHtml = '';
+            if (result.report_markdown) {
+                // The 'sanitize: true' option is deprecated in newer versions, 
+                // but for older or CDN versions it's a quick safeguard. 
+                // A better approach is to use a dedicated sanitizer like DOMPurify.
+                // For this project, we enable the basic sanitization if available.
+                const sanitizedMarkdown = marked.parse(result.report_markdown, { sanitize: true });
+                reportHtml = `
+                    <details style="margin-top: 20px;">
+                        <summary style="cursor: pointer; font-weight: bold;">📄 View Detailed Report</summary>
+                        <div style="background: rgba(0,0,0,0.05); padding: 16px; border-radius: 6px; margin-top: 12px; overflow: auto; max-height: 400px; font-size: 14px;">${sanitizedMarkdown}</div>
+                    </details>
+                `;
+            }
+
+            resultDiv.innerHTML = `
+                <h3>${riskIcon} Analysis Complete</h3>
+                <div class="score">${riskLevel}</div>
+                <p><strong>Threat Score:</strong> ${(score * 100).toFixed(1)}%</p>
+                <p><strong>URL:</strong> ${url}</p>
+                <p><strong>Status:</strong> ${result.status || 'completed'}</p>
+                <p><strong>Analysis Time:</strong> ${new Date(result.created_at || Date.now()).toLocaleString()}</p>
+                ${reportHtml}
+            `;
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeURL();
+            }
+        });
+    </script>
+</body>
+</html>
+
