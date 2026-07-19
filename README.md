@@ -1,4 +1,4 @@
-# 🛡️ Phishing Triage System
+# 🛡️ PhishScope System
 
 > **Intelligent Phishing Detection & Analysis Platform**  
 > Real-time threat assessment using machine learning and multi-source intelligence
@@ -6,12 +6,10 @@
 [![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.116-green.svg)](https://fastapi.tiangolo.com)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.7.1-orange.svg)](https://scikit-learn.org)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 
 <p align="center">
   <img src="./assets/icon.png" alt="Icon Picture" width="150"/> &nbsp;&nbsp;&nbsp;
-  <img src="./assets/home_page.png" alt="Home Page" width="300"/> &nbsp;&nbsp;&nbsp;
   <img src="./assets/design.png" alt="System Design Picture" width="300"/>
 </p>
 
@@ -93,8 +91,6 @@ graph TD
 
 ## 🖼️ Visual Showcase
 
-### 🏠 Home Page
-![Home Page](assets/home_page.png)
 
 ### ⚙️ API Documentation
 ![API Page](assets/api_page.png)
@@ -374,20 +370,6 @@ python FINAL_TEST.py
 - **[Configuration](docs/configuration.md)** - Environment setup
 
 ---
-
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👨‍💻 **Author**
-
-**Huy Tran** - *Full Stack Developer & Cybersecurity Engineer*
-
-- 🌐 **GitHub**: [@itsnothuy](https://github.com/itsnothuy)
-- 📧 **Email**: [contact@huytran.dev](mailto:contact@huytran.dev)
-- 💼 **LinkedIn**: [linkedin.com/in/huytran-dev](https://linkedin.com/in/huytran-dev)
 
 ### **Technical Expertise Demonstrated**
 - **Machine Learning**: Feature engineering, model training, drift detection
